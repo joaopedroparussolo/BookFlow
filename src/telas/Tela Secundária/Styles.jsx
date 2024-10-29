@@ -1,0 +1,63 @@
+import { StyleSheet, Image } from "react-native";
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'black',
+
+
+    },
+    titulo: {
+        color: 'white',
+        padding: 50,
+
+    },
+    divTitulo: {
+        flex: 5,
+        alignItems: 'center',
+        marginTop: 1
+
+    },
+
+    formCadastro: {
+        flex: 5,
+        backgroundColor: 'black',
+        alignItems: 'center',
+        
+
+
+
+    },
+    formFooter: {
+        flex: 0,
+        backgroundColor: 'black',
+        
+
+    },
+    logo: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: -30,
+        // borderRadius: 15
+    },
+    imgLogo: {
+        height: 170,
+        width: 190,
+        // borderRadius: 15
+
+    },
+    mensagem: {
+        color: 'white',
+        marginTop: 10,
+    },
+    LinearGradient:{
+        color: 'black'
+    },
+    Button:{
+        color: 'black'
+    }
+
+});
+
+
+export default styles;
