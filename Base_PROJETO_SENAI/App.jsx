@@ -51,21 +51,21 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 // import XML from '../base/src/components/Xml';
 
-import Cadastrar from "./src/telas/Cadastro/Cadastro";
-import Home from "./src/telas/Home/Home";
-import Login from "./src/telas/Login/Login";
-import Principal from "./src/telas/Tela Principal/Principal"
-import Secundaria from "./src/telas/Tela Secundária/Secundaria"
+// import Cadastrar from "./src/telas/Cadastro/Cadastro";
+// import Home from "./src/telas/Home/Home";
+// import Login from "./src/telas/Login/Login";
+// import Principal from "./src/telas/Tela Principal/Principal"
+// import Secundaria from "./src/telas/Tela Secundária/Secundaria"
 
-import LoginAP from "./src/components/SesiSenai/LoginAP";
-import Boletim from "./src/components/SesiSenai/Boletim";
-import RegistroAluno from "./src/components/SesiSenai/RegistroAluno";
-import ResetSenha from "./src/components/SesiSenai/Reset";
-import Sobre from "./src/telas/Sobre/Sobre";
-import Upload from "./src/telas/Upload/Upload";
-import Resetar from "./src/telas/Resetar Senha/Resetar";
-// import Home from "./src/ProjetoSesiFront/Home/Home";
-import Cadastro from "./src/ProjetoSesiFront/Cadastro/Cadastro";
+// import LoginAP from "./src/components/SesiSenai/LoginAP";
+// import Boletim from "./src/components/SesiSenai/Boletim";
+// import RegistroAluno from "./src/components/SesiSenai/RegistroAluno";
+// import ResetSenha from "./src/components/SesiSenai/Reset";
+// import Sobre from "./src/telas/Sobre/Sobre";
+// import Upload from "./src/telas/Upload/Upload";
+// import Resetar from "./src/telas/Resetar Senha/Resetar";
+// // import Home from "./src/ProjetoSesiFront/Home/Home";
+// import Cadastro from "./src/ProjetoSesiFront/Cadastro/Cadastro";
 // import Login from "./src/ProjetoSesiFront/Login/Login";
 // import Principal from "./src/ProjetoSesiFront/Tela Principal/Principal";
 // import Secundaria from "./src/ProjetoSesiFront/Tela Secundária/Secundaria";

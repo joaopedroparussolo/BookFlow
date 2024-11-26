@@ -4,7 +4,7 @@ import { ImageBackground, StyleSheet, Text, View, TextInput, SafeAreaView, Scrol
 import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
 import { Image } from '@rneui/base';
-import Rive from 'rive-react-native'
+
 
 export default Homesenai = ({ navigation }) => {
 

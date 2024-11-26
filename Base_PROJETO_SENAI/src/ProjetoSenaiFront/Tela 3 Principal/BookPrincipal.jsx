@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, ScrollView, SafeAreaView, ImageBackground, Image, TouchableOpacity, } from 'react-native'
+import { View, Text, ScrollView, SafeAreaView, ImageBackground, Image, RefreshControl, } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -15,7 +15,18 @@ import { FlatList } from 'react-native-gesture-handler';
 "react-native-imaged-carousel-card";
 
 
+
 function BookPrincipal() {
+
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 2000);
+    }, []);
+
     const [data, setData] = useState([]);
 
     const enteringAnimation = new Keyframe({
@@ -30,22 +41,29 @@ function BookPrincipal() {
         }
     }).duration(2000)
 
+
+    const [livros, setLivros] = React.useState([]);
+
     useEffect(() => {
+        const obterLivros = async () => {
+            try {
+                const response = await axios.get('http://10.0.2.2:8085/api/getBooks');
 
-        axios.get(`http://10.0.2.2:8085/api/getBooks`)
-            .then(response => {
-                const sortData = response.data.sort((a, b) => a.id - b.id);
+                console.log(response.data)
+                setLivros(response.data);
+            } catch (error) {
+                console.error('Erro ao obter os alunos:', error);
+            }
+        };
 
-                setData(sortData)
-                console.log(response.data);
+        obterLivros();
+    }, [refreshing]);
 
-            })
-            .catch(error => {
-                console.log(JSON.stringify(error))
-            });
-    }, []);
+    
+
 
     const renderItem = ({ item }) => (
+
         <Animated.View entering={enteringAnimation} style={styles.item}>
 
             <LinearGradient start={{ x: 0.0, y: 0.25 }} end={{ x: 0.0, y: 1.0 }}
@@ -53,12 +71,12 @@ function BookPrincipal() {
 
 
                 <Image
-                    style={{ width: 1800, height: 1800, marginTop: 18, alignSelf: 'center', borderRadius: 10, }} source={{ uri: `data:image/jpeg;base64,${item.livro}` }} >
+                    style={{ width: 180, height: 180, marginTop: 18, alignSelf: 'center', borderRadius: 10, }} source={{ uri: `data:image/jpeg;base64,${item.livro}` }} >
                 </Image>
 
 
                 <Image
-                    style={{ width: 45, height: 45, marginTop: 10, borderRadius: 90, }} source={require('../../../res/img/BOOKFLOW/Default-User.jpg')} >
+                    style={{ width: 45, height: 45, marginTop: 10, borderRadius: 90, marginLeft: -3, }} source={require('../../../res/img/BOOKFLOW/Default-User.jpg')} >
                 </Image>
 
                 <Image
@@ -67,178 +85,57 @@ function BookPrincipal() {
 
                 <Text
                     style={{ marginTop: -52, marginLeft: 52, color: 'black', fontFamily: 'Judson-Regular', }}>
-                    Troco esse livro da Coraline por qualquer outro.
+                    {item.comentario}
                 </Text>
 
 
             </LinearGradient>
         </Animated.View>
+
     )
     return (
 
         <SafeAreaView>
 
-            <ImageBackground style={{ width: 412, height: 760, }} source={require('../../../res/img/BOOKFLOW/FundoEditarPerfil.png')} >
-
-                <Marquee style={{ backgroundColor: 'transparent' }} spacing={20} speed={0.8}>
-                    <Text
-                        style={{
-                            backgroundColor: 'transparent',
-                            color: '#FFC700',
-                            fontFamily: 'Judson-Regular',
-                            fontSize: 15,
-                        }}> TODOS OS DIREITOS RESERVADOS A: JUAN E JOÃO PEDRO</Text>
-                </Marquee>
-               
-
-                <Animated.View entering={enteringAnimation}>
-                    <Text style={styles.title}>Book Flow</Text>
-                </Animated.View>
-                {/* <Marquee style={{ backgroundColor: 'transparent' }} spacing={20} speed={1.0}> */}
-                <ScrollView horizontal>
-                
-                    <Animated.View entering={enteringAnimation} style={styles.item}>
-
-                        <LinearGradient start={{ x: 0.0, y: 0.25 }} end={{ x: 0.0, y: 1.0 }}
-                            locations={[0, 0.5, 0.9]} colors={['#922f2f', '#561c1c', '#561c1c']} style={styles.linearGradient}>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }>
+                <ImageBackground style={{ width: 412, height: 760, }} source={require('../../../res/img/BOOKFLOW/FundoEditarPerfil.png')} >
 
 
-                            <Image
-                                style={{ width: 180, height: 180, marginTop: 18, alignSelf: 'center', borderRadius: 10, }} source={require('../../../res/img/BOOKFLOW/corali.png')} >
-                            </Image>
+                    <Marquee style={{ backgroundColor: 'transparent' }} spacing={20} speed={0.8}>
+                        <Text
+                            style={{
+                                backgroundColor: 'transparent',
+                                color: '#FFC700',
+                                fontFamily: 'Judson-Regular',
+                                fontSize: 15,
+                            }}> TODOS OS DIREITOS RESERVADOS A: JUAN E JOÃO PEDRO</Text>
+                    </Marquee>
 
 
-                            <Image
-                                style={{ width: 45, height: 45, marginTop: 10, borderRadius: 90, }} source={require('../../../res/img/BOOKFLOW/KERMIT.jpg')} >
-                            </Image>
-
-                            <Image
-                                style={{ width: 150, height: 55, marginTop: -50, marginLeft: 48, borderRadius: 10, }} source={require('../../../res/img/BOOKFLOW/FundoMSGBOOKFLOW.png')} >
-                            </Image>
-
-                            <Text
-                                style={{ marginTop: -52, marginLeft: 52, color: 'black', fontFamily: 'Judson-Regular', }}>
-                                Troco esse livro da Coraline por qualquer outro.
-                            </Text>
-
-
-                        </LinearGradient>
+                    <Animated.View entering={enteringAnimation}>
+                        <Text style={styles.title}>Book Flow</Text>
                     </Animated.View>
+                    {/* <Marquee style={{ backgroundColor: 'transparent' }} spacing={20} speed={1.0}> */}
 
-                    <Animated.View entering={enteringAnimation} style={styles.item}>
-                        <LinearGradient start={{ x: 0.0, y: 0.25 }} end={{ x: 0.0, y: 1.0 }}
-                            locations={[0, 0.5, 0.9]} colors={['#922f2f', '#561c1c', '#561c1c']} style={styles.linearGradient}>
-
-                            <Image
-                                style={{ width: 180, height: 180, marginTop: 18, alignSelf: 'center', borderRadius: 10, }} source={require('../../../res/img/BOOKFLOW/DEADPOOLLIVRO.jpg')} >
-                            </Image>
-                            <Image
-                                style={{ width: 45, height: 45, marginTop: 10, borderRadius: 90, }} source={require('../../../res/img/BOOKFLOW/DEADPOOL.jpg')} >
-                            </Image>
-                            <Image
-                                style={{ width: 150, height: 55, marginTop: -50, marginLeft: 48, borderRadius: 10, }} source={require('../../../res/img/BOOKFLOW/FundoMSGBOOKFLOW.png')} >
-                            </Image>
-                            <Text
-                                style={{ marginTop: -52, marginLeft: 52, color: 'black', fontFamily: 'Judson-Regular', }}>
-                                Troco essa HQ do Deadpool por uma do Coringa.
-                            </Text>
-                        </LinearGradient>
+                    <FlatList
+                        horizontal
+                        data={livros}
+                        renderItem={renderItem}
+                        keyExtractor={item => item}
+                        extraData={livros}
+                           
+                    />
 
 
-                    </Animated.View>
-                    <View style={styles.item}>
-                        <LinearGradient start={{ x: 0.0, y: 0.25 }} end={{ x: 0.0, y: 1.0 }}
-                            locations={[0, 0.5, 0.9]} colors={['#922f2f', '#561c1c', '#561c1c']} style={styles.linearGradient}>
-                            <Image
-                                style={{ width: 180, height: 180, marginTop: 18, alignSelf: 'center', borderRadius: 10, }} source={require('../../../res/img/BOOKFLOW/banana.jpg')} >
-                            </Image>
-                            <Image
-                                style={{ width: 45, height: 45, marginTop: 10, borderRadius: 90, }} source={require('../../../res/img/BOOKFLOW/venom.jpg')} >
-                            </Image>
-                            <Image
-                                style={{ width: 150, height: 55, marginTop: -50, marginLeft: 48, borderRadius: 10, }} source={require('../../../res/img/BOOKFLOW/FundoMSGBOOKFLOW.png')} >
-                            </Image>
-                            <Text
-                                style={{ marginTop: -45, marginLeft: 52, color: 'black', fontFamily: 'Judson-Regular', }}>
-                                Troco o Diário de um Banana 1 pelo 2
-                            </Text>
-                        </LinearGradient>
 
+                    {/* </Marquee> */}
 
-                    </View>
-                    <View style={styles.item}>
-                        <LinearGradient start={{ x: 0.0, y: 0.25 }} end={{ x: 0.0, y: 1.0 }}
-                            locations={[0, 0.5, 0.9]} colors={['#922f2f', '#561c1c', '#561c1c']} style={styles.linearGradient}>
-                            <Image
-                                style={{ width: 180, height: 180, marginTop: 18, alignSelf: 'center', borderRadius: 10, }} source={require('../../../res/img/BOOKFLOW/racio.png')} >
-                            </Image>
-                            <Image
-                                style={{ width: 45, height: 45, marginTop: 10, borderRadius: 90, }} source={require('../../../res/img/BOOKFLOW/kenny.jpg')} >
-                            </Image>
-                            <Image
-                                style={{ width: 150, height: 55, marginTop: -50, marginLeft: 48, borderRadius: 10, }} source={require('../../../res/img/BOOKFLOW/FundoMSGBOOKFLOW.png')} >
-                            </Image>
-                            <Text
-                                style={{ marginTop: -52, marginLeft: 52, color: 'black', fontFamily: 'Judson-Regular', }}>
-                                Troco livro dos Racionais por qualquer outro
-                            </Text>
-                        </LinearGradient>
-
-
-                    </View>
-                    <View style={styles.item}>
-                        <LinearGradient start={{ x: 0.0, y: 0.25 }} end={{ x: 0.0, y: 1.0 }}
-                            locations={[0, 0.5, 0.9]} colors={['#922f2f', '#561c1c', '#561c1c']} style={styles.linearGradient}>
-                            <Image
-                                style={{ width: 180, height: 180, marginTop: 18, alignSelf: 'center', borderRadius: 10, }} source={require('../../../res/img/BOOKFLOW/ayrton.jpg')} >
-                            </Image>
-                            <Image
-                                style={{ width: 45, height: 45, marginTop: 10, borderRadius: 90, }} source={require('../../../res/img/BOOKFLOW/jakxon.jpg')} >
-                            </Image>
-                            <Image
-                                style={{ width: 150, height: 55, marginTop: -50, marginLeft: 48, borderRadius: 10, }} source={require('../../../res/img/BOOKFLOW/FundoMSGBOOKFLOW.png')} >
-                            </Image>
-                            <Text
-                                style={{ marginTop: -52, marginLeft: 52, color: 'black', fontFamily: 'Judson-Regular', }}>
-                                Troco livro do Ayrton Senna por qualquer outro
-                            </Text>
-                        </LinearGradient>
-
-
-                    </View>
-                    <View style={styles.item}>
-                        <LinearGradient start={{ x: 0.0, y: 0.25 }} end={{ x: 0.0, y: 1.0 }}
-                            locations={[0, 0.5, 0.9]} colors={['#922f2f', '#561c1c', '#561c1c']} style={styles.linearGradient}>
-                            <Image
-                                style={{ width: 180, height: 180, marginTop: 18, alignSelf: 'center', borderRadius: 10, }} source={require('../../../res/img/BOOKFLOW/vento.jpg')} >
-                            </Image>
-                            <Image
-                                style={{ width: 45, height: 45, marginTop: 10, borderRadius: 90, }} source={require('../../../res/img//BOOKFLOW/tes.jpg')} >
-                            </Image>
-                            <Image
-                                style={{ width: 150, height: 55, marginTop: -50, marginLeft: 48, borderRadius: 10, }} source={require('../../../res/img/BOOKFLOW/FundoMSGBOOKFLOW.png')} >
-                            </Image>
-                            <Text
-                                style={{ marginTop: -52, marginLeft: 52, color: 'black', fontFamily: 'Judson-Regular', }}>
-                                Troco "O Menino Que Descobriu o Vento" por algum igual
-                            </Text>
-
-                        </LinearGradient>
-                    </View>
-
-                </ScrollView>
-                <FlatList
-                    style={{ marginTop: 0, width: 1000, height: 10 }}
-                    data={data}
-                    renderItem={renderItem}
-                    keyExtractor={item => String(item.id)}
-                    extraData={data}
-
-                />
-                {/* </Marquee> */}
-            </ImageBackground>
-
-        </SafeAreaView>
+                </ImageBackground>
+            </ScrollView>
+        </SafeAreaView >
     );
 }
 
@@ -349,8 +246,9 @@ const styles = StyleSheet.create({
         marginTop: 200,
     },
     item: {
+        flexDirection: 'row',
         width: 220,
-        height: 280,
+        height: 240,
         marginHorizontal: 20,
         marginTop: 55,
         transform: [
@@ -367,6 +265,7 @@ const styles = StyleSheet.create({
 
     linearGradient: {
         flex: 1,
+        height: 270,
         paddingLeft: 15,
         paddingRight: 15,
         borderRadius: 20,
@@ -419,7 +318,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Inspiration',
         fontSize: 90,
         textShadowColor: 'rgba(0, 0, 0, 0.75)',
-         textShadowOffset: {width: -1, height: 1},
-         textShadowRadius: 15
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 15
     },
 })

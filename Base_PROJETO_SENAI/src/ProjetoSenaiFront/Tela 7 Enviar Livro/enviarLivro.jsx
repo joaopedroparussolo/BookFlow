@@ -8,7 +8,7 @@ import { Image } from '@rneui/base';
 import { Button } from '@rneui/themed';
 import RNFS from 'react-native-fs';
 import Animated, { Keyframe } from 'react-native-reanimated';
-import Rive from 'rive-react-native';
+
 
 const Botoes = () => {
     const [imagem, setImagem] = useState(null);
@@ -21,11 +21,13 @@ const Botoes = () => {
 
         try {
             const response = await launchCamera(options);
-            console.log('pickedFile', response);
-
+            
             // Verifica se a imagem foi capturada com sucesso
             if (response.assets && response.assets.length > 0) {
                 const image = response.assets[0];
+
+                console.log(image);
+
                 setImagem(image);
             } else {
                 console.log('Nenhuma imagem capturada.');
@@ -75,7 +77,7 @@ const Botoes = () => {
             };
 
             // URL da sua API para enviar os dados e a imagem
-            const apiUrl = 'http://10.0.2.2:8085/api/cadastro';
+            const apiUrl = 'http://10.0.2.2:8085/api/cadastro_livro';
 
             // Dados a serem enviados para a API
             const data = {
